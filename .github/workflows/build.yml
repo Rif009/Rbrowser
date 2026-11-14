@@ -1,0 +1,68 @@
+name: Checks and Android build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Core checks
+        run: dotnet run --project Rbrowser.Checks/Rbrowser.Checks.csproj -c Release
+      - name: JavaScript checks
+        shell: bash
+        run: |
+          set -e
+          node tests/navigation.test.cjs
+          node tests/twitch-adblock.test.cjs
+          node tests/media-detector.test.cjs
+          node tests/localization.test.cjs
+
+  android:
+    if: github.event_name == 'workflow_dispatch'
+    needs: checks
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install MAUI Android workload
+        run: dotnet workload install maui-android
+      - name: Install Android dependencies
+        run: dotnet build Rbrowser/Rbrowser.csproj -t:InstallAndroidDependencies -f net10.0-android -p:AndroidSdkDirectory="$env:ANDROID_HOME" -p:JavaSdkDirectory="$env:JAVA_HOME" -p:AcceptAndroidSDKLicenses=True
+      - name: Build checked APK (local debug signing)
+        run: ./tools/Publish.ps1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Rbrowser-android-tv
+          path: artifacts/Rbrowser-0.8.2-tv.apk
+          if-no-files-found: error
+          retention-days: 14

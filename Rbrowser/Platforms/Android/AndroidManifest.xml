@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+ <uses-permission android:name="android.permission.INTERNET" /><uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+ <uses-permission android:name="android.permission.RECORD_AUDIO" />
+ <queries><intent><action android:name="android.speech.RecognitionService" /></intent><intent><action android:name="android.speech.action.RECOGNIZE_SPEECH" /></intent></queries>
+ <uses-feature android:name="android.software.leanback" android:required="true" /><uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+ <uses-feature android:name="android.hardware.microphone" android:required="false" />
+ <application android:allowBackup="false" android:label="Rbrowser" android:icon="@drawable/rbrowser_icon" android:roundIcon="@drawable/rbrowser_icon" android:banner="@drawable/rbrowser_tv_banner" android:usesCleartextTraffic="true" android:hardwareAccelerated="true" android:supportsRtl="true" />
+</manifest>

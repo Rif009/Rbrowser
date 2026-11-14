@@ -1,0 +1,9 @@
+! Title: Rbrowser verified site fixes
+! Derived from observed Vost requests and RU AdList patterns, 2026-11-09.
+! WebView omits resource-type headers for some script URLs; keep fixes scoped to Vost.
+/*.php?uid=$domain=vost.pw
+/wcm/?sh=$third-party,domain=vost.pw
+*/vd/stpre/*$third-party,domain=vost.pw
+*/mbn/ssp/*$third-party,domain=vost.pw
+vost.pw##div[class^="_"][style*="position: fixed"]:has(iframe[src*="/mbn/"])
+vost.pw##iframe[src*="/mbn/ssp/"]

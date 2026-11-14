@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Rbrowser.Checks/Rbrowser.Checks.csproj" />
+  <Project Path="Rbrowser.Core/Rbrowser.Core.csproj" />
+  <Project Path="Rbrowser/Rbrowser.csproj" />
+</Solution>
